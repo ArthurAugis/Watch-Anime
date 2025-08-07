@@ -1,0 +1,22 @@
+{
+  "name": "watch-anime-auto-insert",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["anime", "scraping", "automation", "discord-bot"],
+  "author": "Arthur Augis",
+  "license": "MIT",
+  "description": "Script d'automatisation pour l'insertion de données d'animés dans Watch-Anime",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "cheerio": "^1.1.2",
+    "discord.js": "^14.21.0",
+    "dotenv": "^17.2.1",
+    "mysql2": "^3.14.3",
+    "sharp": "^0.34.3",
+    "ssh2-sftp-client": "^12.0.1"
+  }
+}

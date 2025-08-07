@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /
+
+Allow: /$
+Allow: /catalogue$
+Allow: /likes$
+Allow: /watchlater$
+Allow: /login$
+Allow: /history$
+Allow: /recommandations$
+Allow: /top-animes$
+Allow: /recent-update$
+Allow: /ublock$
+Allow: /ads.txt
