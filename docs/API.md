@@ -1,30 +1,30 @@
-# 📚 Documentation de l'API
+# 📚 API Documentation
 
-## Vue d'ensemble
+## Overview
 
-L'API Watch-Anime est construite avec Next.js App Router et fournit des endpoints RESTful pour la gestion des animés, utilisateurs, et fonctionnalités de streaming.
+The Watch-Anime API is built with Next.js App Router and provides RESTful endpoints for managing anime, users, and streaming features.
 
 ## Base URL
 ```
-http://localhost:3000/api (développement)
-https://votre-domaine.com/api (production)
+http://localhost:3000/api (development)
+https://your-domain.com/api (production)
 ```
 
-## Authentification
+## Authentication
 
 ### NextAuth.js
-L'API utilise NextAuth.js pour l'authentification avec les providers OAuth.
+The API uses NextAuth.js for authentication with OAuth providers.
 
-#### Endpoints d'authentification
+#### Authentication Endpoints
 ```
-GET  /api/auth/signin          # Page de connexion
-POST /api/auth/signin/:provider # Connexion avec provider
-GET  /api/auth/callback/:provider # Callback OAuth
-GET  /api/auth/signout         # Déconnexion
-GET  /api/auth/session         # Session actuelle
+GET  /api/auth/signin          # Sign-in page
+POST /api/auth/signin/:provider # Sign-in with provider
+GET  /api/auth/callback/:provider # OAuth Callback
+GET  /api/auth/signout         # Sign-out
+GET  /api/auth/session         # Current session
 ```
 
-#### Vérification de session
+#### Session Verification
 ```javascript
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
@@ -35,22 +35,22 @@ if (!session) {
 }
 ```
 
-## Endpoints de l'API
+## API Endpoints
 
-### 🎬 Animés
+### 🎬 Anime
 
 #### `GET /api/anime/list`
-Récupère la liste des animés avec pagination.
+Retrieves the list of anime with pagination.
 
-**Paramètres de requête :**
-- `page` (number, optional) : Page courante (défaut: 1)
-- `limit` (number, optional) : Nombre d'éléments par page (défaut: 20, max: 100)
-- `search` (string, optional) : Terme de recherche
-- `genre` (string, optional) : Filtrer par genre
-- `year` (number, optional) : Filtrer par année
-- `status` (string, optional) : Filtrer par statut (en_cours, termine, a_venir)
+**Query Parameters:**
+- `page` (number, optional): Current page (default: 1)
+- `limit` (number, optional): Items per page (default: 20, max: 100)
+- `search` (string, optional): Search term
+- `genre` (string, optional): Filter by genre
+- `year` (number, optional): Filter by year
+- `status` (string, optional): Filter by status (en_cours, termine, a_venir)
 
-**Réponse :**
+**Response:**
 ```json
 {
   "animes": [
@@ -59,7 +59,7 @@ Récupère la liste des animés avec pagination.
       "nom_anime": "Attack on Titan",
       "nom_url": "attack-on-titan",
       "affiche_url": "https://example.com/poster.jpg",
-      "description": "Description de l'anime...",
+      "description": "Anime description...",
       "note": 9.2,
       "annee": 2013,
       "statut": "termine",
@@ -80,12 +80,12 @@ Récupère la liste des animés avec pagination.
 ```
 
 #### `GET /api/anime/info`
-Récupère les informations détaillées d'un anime.
+Retrieves detailed information about an anime.
 
-**Paramètres de requête :**
-- `nom_url` (string, required) : Nom URL de l'anime
+**Query Parameters:**
+- `nom_url` (string, required): Anime URL name
 
-**Réponse :**
+**Response:**
 ```json
 {
   "anime": {
@@ -93,7 +93,7 @@ Récupère les informations détaillées d'un anime.
     "nom_anime": "Attack on Titan",
     "nom_url": "attack-on-titan",
     "affiche_url": "https://example.com/poster.jpg",
-    "description": "Description complète...",
+    "description": "Full description...",
     "note": 9.2,
     "annee": 2013,
     "statut": "termine",
@@ -111,20 +111,20 @@ Récupère les informations détaillées d'un anime.
 ```
 
 #### `GET /api/anime/episodes`
-Récupère les épisodes d'un anime.
+Retrieves episodes for an anime.
 
-**Paramètres de requête :**
-- `nom_url` (string, required) : Nom URL de l'anime
-- `saison` (number, optional) : Numéro de saison (défaut: 1)
-- `langue` (string, optional) : Langue des épisodes (vf, vostfr, vo)
+**Query Parameters:**
+- `nom_url` (string, required): Anime URL name
+- `saison` (number, optional): Season number (default: 1)
+- `langue` (string, optional): Episode language (vf, vostfr, vo)
 
-**Réponse :**
+**Response:**
 ```json
 {
   "episodes": [
     {
       "numero_episode": 1,
-      "nom_episode": "À toi, dans 2000 ans",
+      "nom_episode": "To You, in 2000 Years",
       "saison": 1,
       "langues": {
         "vf": [
@@ -148,38 +148,38 @@ Récupère les épisodes d'un anime.
 ```
 
 #### `GET /api/anime/lecteurs`
-Récupère les lecteurs disponibles pour un épisode.
+Retrieves available players for an episode.
 
-**Paramètres de requête :**
-- `nom_url` (string, required) : Nom URL de l'anime
-- `episode` (number, required) : Numéro de l'épisode
-- `saison` (number, optional) : Numéro de saison (défaut: 1)
-- `langue` (string, required) : Langue (vf, vostfr, vo)
+**Query Parameters:**
+- `nom_url` (string, required): Anime URL name
+- `episode` (number, required): Episode number
+- `saison` (number, optional): Season number (default: 1)
+- `langue` (string, required): Language (vf, vostfr, vo)
 
 #### `GET /api/anime/langues`
-Récupère les langues disponibles pour un anime.
+Retrieves available languages for an anime.
 
-**Paramètres de requête :**
-- `nom_url` (string, required) : Nom URL de l'anime
+**Query Parameters:**
+- `nom_url` (string, required): Anime URL name
 
 #### `GET /api/anime/saisons`
-Récupère les saisons disponibles pour un anime.
+Retrieves available seasons for an anime.
 
 #### `GET /api/anime/default`
-Récupère les animés par défaut pour la page d'accueil.
+Retrieves default anime for the home page.
 
 #### `GET /api/anime/mostlike`
-Récupère les animés les plus aimés.
+Retrieves most liked anime.
 
 #### `GET /api/anime/recentupdate`
-Récupère les animés récemment mis à jour.
+Retrieves recently updated anime.
 
-### 👤 Utilisateurs authentifiés
+### 👤 Authenticated Users
 
 #### `POST /api/user/history/add`
-Ajoute un épisode à l'historique utilisateur.
+Adds an episode to user history.
 
-**Corps de la requête :**
+**Request Body:**
 ```json
 {
   "nom_url": "attack-on-titan",
@@ -192,103 +192,103 @@ Ajoute un épisode à l'historique utilisateur.
 ```
 
 #### `GET /api/user/history/list`
-Récupère l'historique de l'utilisateur.
+Retrieves user history.
 
 #### `GET /api/user/history/lastview`
-Récupère le dernier épisode regardé.
+Retrieves the last watched episode.
 
 #### `POST /api/user/like/change`
-Ajoute ou retire un anime des favoris.
+Adds or removes an anime from favorites.
 
-**Corps de la requête :**
+**Request Body:**
 ```json
 {
   "nom_url": "attack-on-titan",
-  "action": "add" // ou "remove"
+  "action": "add" // or "remove"
 }
 ```
 
 #### `GET /api/user/like/has`
-Vérifie si un anime est dans les favoris.
+Checks if an anime is in favorites.
 
 #### `GET /api/user/like/list`
-Récupère la liste des favoris.
+Retrieves the list of favorites.
 
 #### `POST /api/user/watchlater/change`
-Ajoute ou retire un anime de la watchlist.
+Adds or removes an anime from the watchlist.
 
 #### `GET /api/user/watchlater/has`
-Vérifie si un anime est dans la watchlist.
+Checks if an anime is in the watchlist.
 
 #### `GET /api/user/watchlater/list`
-Récupère la watchlist.
+Retrieves the watchlist.
 
 #### `GET /api/user/recommandation/list`
-Récupère les recommandations personnalisées.
+Retrieves personalized recommendations.
 
-### 🎭 Mode invité
+### 🎭 Guest Mode
 
-Les endpoints `/api/guest/*` permettent aux utilisateurs non authentifiés de sauvegarder temporairement leurs données dans le localStorage.
+Endpoints `/api/guest/*` allow unauthenticated users to temporarily save their data in localStorage.
 
-#### Endpoints disponibles :
+#### Available Endpoints:
 - `GET /api/guest/history/list`
-- `GET /api/guest/like/list`  
+- `GET /api/guest/like/list`
 - `GET /api/guest/recommandation/list`
 - `GET /api/guest/watchlater/list`
 
-### 🛠️ Utilitaires
+### 🛠️ Utilities
 
 #### `GET /api/utils/changelogs`
-Récupère les changelogs du site.
+Retrieves site changelogs.
 
-**Réponse :**
+**Response:**
 ```json
 {
   "changelogs": [
     {
       "version": "1.2.0",
       "date_release": "2024-01-15",
-      "contenu": "- Ajout du support multi-saisons\n- Amélioration des performances\n- Correction de bugs"
+      "contenu": "- Added multi-season support\n- Performance improvements\n- Bug fixes"
     }
   ]
 }
 ```
 
-## Codes de statut HTTP
+## HTTP Status Codes
 
-| Code | Signification | Description |
+| Code | Meaning       | Description |
 |------|---------------|-------------|
-| 200  | OK            | Requête réussie |
-| 201  | Created       | Ressource créée |
-| 400  | Bad Request   | Paramètres invalides |
-| 401  | Unauthorized  | Authentification requise |
-| 403  | Forbidden     | Permissions insuffisantes |
-| 404  | Not Found     | Ressource non trouvée |
-| 500  | Server Error  | Erreur serveur |
+| 200  | OK            | Request successful |
+| 201  | Created       | Resource created |
+| 400  | Bad Request   | Invalid parameters |
+| 401  | Unauthorized  | Authentication required |
+| 403  | Forbidden     | Insufficient permissions |
+| 404  | Not Found     | Resource not found |
+| 500  | Server Error  | Server error |
 
-## Gestion des erreurs
+## Error Handling
 
-Format standard des erreurs :
+Standard error format:
 ```json
 {
-  "error": "Description de l'erreur",
+  "error": "Error description",
   "code": "ERROR_CODE",
   "details": {
-    "field": "Détail spécifique"
+    "field": "Specific detail"
   }
 }
 ```
 
-## Exemples d'utilisation
+## Usage Examples
 
-### Récupérer des animés avec recherche
+### Retrieve anime with search
 ```javascript
 const response = await fetch('/api/anime/list?search=attack&genre=Action&page=1');
 const data = await response.json();
 console.log(data.animes);
 ```
 
-### Ajouter à l'historique
+### Add to history
 ```javascript
 const response = await fetch('/api/user/history/add', {
   method: 'POST',
@@ -306,7 +306,7 @@ const response = await fetch('/api/user/history/add', {
 });
 ```
 
-### Ajouter aux favoris
+### Add to favorites
 ```javascript
 const response = await fetch('/api/user/like/change', {
   method: 'POST',
@@ -322,39 +322,39 @@ const response = await fetch('/api/user/like/change', {
 
 ## Rate Limiting
 
-- **Lecture** : 1000 requêtes/heure par IP
-- **Écriture** : 100 requêtes/heure par utilisateur authentifié
-- **Recherche** : 60 requêtes/minute par IP
+- **Read**: 1000 requests/hour per IP
+- **Write**: 100 requests/hour per authenticated user
+- **Search**: 60 requests/minute per IP
 
 ## Cache
 
-Les réponses sont mises en cache selon leur type :
-- **Liste d'animés** : 5 minutes
-- **Informations anime** : 1 heure
-- **Épisodes** : 30 minutes
-- **Historique utilisateur** : Pas de cache
-- **Favoris** : 1 minute
+Responses are cached based on their type:
+- **Anime List**: 5 minutes
+- **Anime Info**: 1 hour
+- **Episodes**: 30 minutes
+- **User History**: No cache
+- **Favorites**: 1 minute
 
 ## CORS
 
-L'API accepte les requêtes cross-origin depuis :
-- Domaines configurés en production
-- `localhost:3000` en développement
+The API accepts cross-origin requests from:
+- Domains configured in production
+- `localhost:3000` in development
 
 ## Webhooks
 
-### Endpoint de notification
+### Notification Endpoint
 `POST /api/webhooks/anime-update`
 
-Permet aux services externes de notifier la mise à jour d'animés.
+Allows external services to notify about anime updates.
 
-**Headers requis :**
+**Required Headers:**
 ```
 Authorization: Bearer YOUR_WEBHOOK_SECRET
 Content-Type: application/json
 ```
 
-**Corps de la requête :**
+**Request Body:**
 ```json
 {
   "anime_id": 123,
@@ -370,7 +370,7 @@ Content-Type: application/json
 }
 ```
 
-## SDK JavaScript (optionnel)
+## JavaScript SDK (Optional)
 
 ```javascript
 class WatchAnimeAPI {
@@ -397,7 +397,7 @@ class WatchAnimeAPI {
     return response.json();
   }
 
-  // ... autres méthodes
+  // ... other methods
 }
 
 // Usage
