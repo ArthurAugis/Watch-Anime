@@ -7,15 +7,15 @@ const dotenvResult = dotenv.config();
 function logEnvFromDotenv(parsed) {
     try {
         if (!parsed || Object.keys(parsed).length === 0) {
-            console.log('[ENV] No .env file found or empty content.');
+            console.log('[ENV] No .env file found or no content parsed.');
             return;
         }
-        console.log('[ENV] Variables loaded from .env:');
+        console.log('[ENV] Variables loaded from .env :');
         for (const [k, v] of Object.entries(parsed)) {
             console.log(`[ENV] ${k}=${v}`);
         }
     } catch (e) {
-        console.warn('[ENV] Error displaying .env:', e && e.message ? e.message : e);
+        console.warn('[ENV] Error displaying .env :', e && e.message ? e.message : e);
     }
 }
 
@@ -28,7 +28,7 @@ if (dotenvResult && dotenvResult.parsed) {
         const parsed = dotenv.parse(envFile);
         logEnvFromDotenv(parsed);
     } catch (e) {
-        console.log('[ENV] .env not present or inaccessible.');
+        console.log('[ENV] .env missing or inaccessible.');
     }
 }
 

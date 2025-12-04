@@ -1,0 +1,7 @@
+node_modules
+.env
+logs.txt
+liens_catalogue.json
+catalog_links.json
+*.log
+.DS_Store

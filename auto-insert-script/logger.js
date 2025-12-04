@@ -5,4 +5,6 @@ function logError(msg) {
     fs.appendFileSync(config.LOG_FILE, msg + '\n', 'utf-8');
 }
 
-module.exports = { logError };
+module.exports = {
+    logError
+};
