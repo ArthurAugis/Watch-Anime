@@ -185,7 +185,7 @@ function parseEpisodeNames(scriptContent, maxEpisodes = 0) {
 
 async function fetchEpisodesForSeason(seasonHref, baseAnimeUrl) {
     let logContext = `[SAISON] ${baseAnimeUrl} | ${seasonHref}`;
-    let base = (baseAnimeUrl.startsWith('http') ? baseAnimeUrl : `https://anime-sama.org${baseAnimeUrl}`).trim();
+    let base = (baseAnimeUrl.startsWith('http') ? baseAnimeUrl : `https://anime-sama.eu${baseAnimeUrl}`).trim();
     base = base.replace(/\/$/, '');
     let href = seasonHref.trim();
     href = href.startsWith('/') ? href : '/' + href;
@@ -338,20 +338,20 @@ async function fetchInfos(url) {
     try {
         const { gotScraping } = await import('got-scraping');
         url = url.trim();
-        const options = { url: url.startsWith('http') ? url : `https://anime-sama.org${url}` };
+        const options = { url: url.startsWith('http') ? url : `https://anime-sama.eu${url}` };
         const { body } = await gotScraping(options);
         const $ = cheerio.load(body);
-        const titre = $('#titreOeuvre').text().trim();
+        const titre = ($('#titreOeuvre').text() || $('h1').first().text() || '').trim();
         const titreAlterText = $('#titreAlter').text().trim();
         const titresAlter = titreAlterText ? titreAlterText.split(',').map(t => t.trim()).filter(Boolean) : [];
         let synopsis = '';
-        const h2Synopsis = $('h2.text-white.text-xl.font-bold.uppercase.border-b-2.mb-3.mt-5.border-slate-700').filter((_, el) => $(el).text().trim().toLowerCase() === 'synopsis');
+        const h2Synopsis = $('h2').filter((_, el) => $(el).text().trim().toLowerCase() === 'synopsis');
         if (h2Synopsis.length > 0) {
             const p = h2Synopsis.first().next('p');
             if (p.length > 0) synopsis = p.text().trim();
         }
         let genres = [];
-        const h2Genres = $('h2.text-white.text-xl.font-bold.uppercase.border-b-2.mb-3.mt-5.border-slate-700').filter((_, el) => $(el).text().trim().toLowerCase() === 'genres');
+        const h2Genres = $('h2').filter((_, el) => $(el).text().trim().toLowerCase() === 'genres');
         if (h2Genres.length > 0) {
             let next = h2Genres.first().next();
             let tries = 0;
@@ -367,34 +367,20 @@ async function fetchInfos(url) {
         }
         let animeLinks = [];
         let ordre = 1;
-        const h2Anime = $('h2.text-white.text-xl.font-bold.uppercase.border-b-2.mt-5.border-slate-500').filter((_, el) => $(el).text().trim().toLowerCase() === 'anime');
-        if (h2Anime.length > 0) {
-            let next = h2Anime.first().next();
-            let tries = 0;
-            while (next.length && next[0].tagName !== 'div' && tries < 3) {
-                next = next.next();
-                tries++;
-            }
-            if (next.length && next[0].tagName === 'div') {
-                const script = next.find('script');
-                if (script.length > 0) {
-                    let scriptContent = script.html();
-                    if (scriptContent) {
-                        scriptContent = scriptContent.replace(/\/\*[\s\S]*?\*\//g, '');
-                        scriptContent.split('\n').forEach(line => {
-                            const trimmed = line.trim();
-                            if (/^panneauAnime\s*\(/.test(trimmed)) {
-                                const match = /^panneauAnime\(["']([^"']+)["'],\s*["']([^"']+)["']\)/.exec(trimmed);
-                                if (match) {
-                                    animeLinks.push({ href: match[2].trim(), nom: match[1].trim(), ordre });
-                                    ordre++;
-                                }
-                            }
-                        });
-                    }
+        
+        $('script').each((_, el) => {
+            const scriptContent = $(el).html();
+            if (scriptContent && scriptContent.includes('panneauAnime') && !scriptContent.includes('function panneauAnime')) {
+                const cleanContent = scriptContent.replace(/\/\*[\s\S]*?\*\//g, '');
+                const regex = /panneauAnime\s*\(\s*["']([^"']+)["']\s*,\s*["']([^"']+)["']\s*\)/g;
+                let match;
+                while ((match = regex.exec(cleanContent)) !== null) {
+                    animeLinks.push({ href: match[2].trim(), nom: match[1].trim(), ordre });
+                    ordre++;
                 }
             }
-        }
+        });
+
         if (!animeLinks || animeLinks.length === 0) {
             logError(`[ANIME] ${url} | No seasons found`);
         }
@@ -419,7 +405,7 @@ async function fetchInfos(url) {
         return { titre, titresAlter, synopsis, genres, animeLinks: allSaisons };
     } catch (e) {
         logError(`[ANIME] ${url} | fetchInfos Error: ${e.message}`);
-        return { titre: '', titresAlter: [], synopsis: '', genres: [] };
+        return { titre: '', titresAlter: [], synopsis: '', genres: [], animeLinks: [] };
     }
 }
 

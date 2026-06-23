@@ -86,43 +86,33 @@ export default function MostLikeAccueil({ animes: initialAnimes }: { animes?: An
         <Grid container spacing={2} justifyContent="flex-start">
           {loading
             ? Array.from({ length: 2 }).map((_, index) => (
-                <Grid
-                  item
-                  key={index}
-                  xs={6}
-                  sm={4}
-                  md={3.5}
-                  lg={2.4}
-                  xl={1.6}
-                  ref={index === 0 ? firstRowRef : undefined}
-                >
-                  <AnimeCard loading refProp={index === 0 ? firstRowRef : undefined} />
-                </Grid>
-              ))
+              <Grid
+                key={index}
+                size={{ xs: 6, sm: 4, md: 3.5, lg: 2.4, xl: 1.6 }}
+                ref={index === 0 ? firstRowRef : undefined}
+              >
+                <AnimeCard loading refProp={index === 0 ? firstRowRef : undefined} />
+              </Grid>
+            ))
             : animes.map((anime, index) => {
-                const triggerIndex =
-                  animes.length > 5 ? animes.length - 5 : animes.length - 1;
-                const isTriggerElement = index === triggerIndex;
+              const triggerIndex =
+                animes.length > 5 ? animes.length - 5 : animes.length - 1;
+              const isTriggerElement = index === triggerIndex;
 
-                return (
-                  <Grid
-                    item
-                    key={`${anime.nomAnimeURL}-${index}`}
-                    xs={6}
-                    sm={4}
-                    md={3.5}
-                    lg={2.4}
-                    xl={1.6}
-                  >
-                    <AnimeCard
-                      anime={anime}
-                      refProp={isTriggerElement ? firstRowRef : undefined}
-                      onClick={() => router.push(`/player/${anime.nomAnimeURL}`)}
-                      onMenuClick={handleOpenMenu}
-                    />
-                  </Grid>
-                );
-              })}
+              return (
+                <Grid
+                  key={`${anime.nomAnimeURL}-${index}`}
+                  size={{ xs: 6, sm: 4, md: 3.5, lg: 2.4, xl: 1.6 }}
+                >
+                  <AnimeCard
+                    anime={anime}
+                    refProp={isTriggerElement ? firstRowRef : undefined}
+                    onClick={() => router.push(`/player/${anime.nomAnimeURL}`)}
+                    onMenuClick={handleOpenMenu}
+                  />
+                </Grid>
+              );
+            })}
         </Grid>
       </Box>
     </Box>

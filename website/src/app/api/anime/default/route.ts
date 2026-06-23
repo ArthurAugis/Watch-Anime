@@ -37,33 +37,33 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Si 'episode' est spécifié, 'langue' et 'saison' sont obligatoires." }, { status: 400 });
     }
 
-    if(!langueDecoded) {
-        const [rows]: any = await db.query("CALL proc_getAnimeLangueDefault(?)", [animeDecoded]);
-        langueDecoded = rows[0]?.[0].anime_langue;
+    if (!langueDecoded) {
+      const [rows]: any = await db.query("CALL proc_getAnimeLangueDefault(?)", [animeDecoded]);
+      langueDecoded = rows[0]?.[0]?.anime_langue;
     }
 
-    if(!saisonDecoded) {
-        const [rows]: any = await db.query("CALL proc_getAnimeSaisonDefault(?, ?)", [animeDecoded, langueDecoded]);
-        saisonDecoded = rows[0]?.[0].saison_nom_url;
+    if (!saisonDecoded) {
+      const [rows]: any = await db.query("CALL proc_getAnimeSaisonDefault(?, ?)", [animeDecoded, langueDecoded]);
+      saisonDecoded = rows[0]?.[0]?.saison_nom_url;
     }
 
-    if(!episodeDecoded) {
-        const [rows]: any = await db.query("CALL proc_getAnimeEpisodeDefault(?, ?, ?)", [animeDecoded, langueDecoded, saisonDecoded]);
-        episodeDecoded = rows[0]?.[0].episode_nom_url;
+    if (!episodeDecoded) {
+      const [rows]: any = await db.query("CALL proc_getAnimeEpisodeDefault(?, ?, ?)", [animeDecoded, langueDecoded, saisonDecoded]);
+      episodeDecoded = rows[0]?.[0]?.episode_nom_url || rows[0]?.[0]?.anime_episode;
     }
 
-    if(!lecteurDecoded) {
-        const [rows]: any = await db.query("CALL proc_getAnimeLecteurDefault(?, ?, ?, ?)", [animeDecoded, langueDecoded, saisonDecoded, episodeDecoded]);
-        lecteurDecoded = rows[0]?.[0].lecteur_nom_url;
+    if (!lecteurDecoded) {
+      const [rows]: any = await db.query("CALL proc_getAnimeLecteurDefault(?, ?, ?, ?)", [animeDecoded, langueDecoded, saisonDecoded, episodeDecoded]);
+      lecteurDecoded = rows[0]?.[0]?.lecteur_nom_url;
     }
 
     const animeData: Anime = {
-        nom_anime: animeDecoded,
-        nom_langue: langueDecoded,
-        nom_saison: saisonDecoded,
-        nom_episode: episodeDecoded,
-        nom_lecteur: lecteurDecoded,
-      };
+      nom_anime: animeDecoded,
+      nom_langue: langueDecoded,
+      nom_saison: saisonDecoded,
+      nom_episode: episodeDecoded,
+      nom_lecteur: lecteurDecoded,
+    };
 
     return serveCompressedJSON(animeData);
 

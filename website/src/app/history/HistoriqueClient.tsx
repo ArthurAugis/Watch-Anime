@@ -181,13 +181,8 @@ export default function HistoriqueClient() {
 
           return (
             <Grid
-              item
               key={`${anime.nomAnimeURL}-${anime.episodeAnimeURL}-${index}`}
-              xs={6}
-              sm={4}
-              md={3.5}
-              lg={2.4}
-              xl={1.6}
+              size={{ xs: 6, sm: 4, md: 3.5, lg: 2.4, xl: 1.6 }}
               ref={isTriggerElement ? triggerElementRef : null}
             >
               <AnimeCard
@@ -203,7 +198,7 @@ export default function HistoriqueClient() {
         })}
 
         {loading && (
-          <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
+          <Grid size={{ xs: 12 }} sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
             <Box
               sx={{
                 width: 60,
@@ -238,7 +233,7 @@ export default function HistoriqueClient() {
         )}
 
         {!loading && animes.length === 0 && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography
               variant="h6"
               sx={{

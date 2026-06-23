@@ -4,10 +4,10 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  const isAuthenticated = !!token;
   const url = req.nextUrl.clone();
   const { pathname } = req.nextUrl;
 
+  const isAuthenticated = !!token;
   const protectedRoutes = ["/settings", "/profile"];
   const publicOnlyRoutes = ["/login"];
 

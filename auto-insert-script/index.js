@@ -49,6 +49,12 @@ async function main() {
       const cleanLink = link.trim().replace(/\/+/, '/').replace(/([^:])\/\//g, '$1/').replace(':/', '://');
       console.log(`Fetching info ${i + 1}/${Math.min(allLinks.length, max)} : ${cleanLink}`);
       const infos = await fetchInfos(cleanLink);
+      const isTitleInvalid = !infos || !infos.titre || infos.titre.trim().length <= 1;
+      if (isTitleInvalid) {
+        console.warn(`[SYNC] Skipping anime with invalid title: "${infos?.titre}" (${cleanLink})`);
+        continue;
+      }
+      
       const poster = await getPoster(infos.titre, infos.titresAlter);
       await Promise.all(infos.animeLinks.map(async saison => {
         saison.langs = await checkLangsForSeason(saison.href.trim(), cleanLink);
@@ -56,6 +62,14 @@ async function main() {
       results.push({ url: cleanLink, ...infos, poster });
 
       await syncAnime(infos, poster, db, caches);
+    }
+
+    // Verify and clean up any anime in DB with no title or length <= 1
+    const [deleteResult] = await db.query(
+      "DELETE FROM tab_liste_anime WHERE nom IS NULL OR TRIM(nom) = '' OR CHAR_LENGTH(TRIM(nom)) <= 1"
+    );
+    if (deleteResult.affectedRows > 0) {
+      console.log(`[CLEANUP] Deleted ${deleteResult.affectedRows} anime with invalid titles from database.`);
     }
 
     fs.writeFileSync('catalog_links.json', JSON.stringify(results, null, 2), 'utf-8');

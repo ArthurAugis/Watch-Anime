@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdn.watch-anime.fr',
-        pathname: '/img/anime/**',
+        hostname: '**',
+        pathname: '**',
       },
     ],
     minimumCacheTTL: 60,

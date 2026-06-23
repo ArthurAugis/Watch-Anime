@@ -33,7 +33,7 @@ if (dotenvResult && dotenvResult.parsed) {
 }
 
 module.exports = {
-    BASE_URL: 'https://anime-sama.org/catalogue/?type%5B0%5D=Anime&search=&page=',
+    BASE_URL: 'https://anime-sama.to/catalogue/?type%5B0%5D=Anime&search=&page=',
     LANGS: ['vf', 'vj', 'vcn', 'vqc', 'vkr', 'va', 'vf1', 'vf2', 'vostfr'],
     LOG_FILE: 'logs.txt',
     DB: {

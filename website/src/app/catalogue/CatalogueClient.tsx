@@ -233,13 +233,8 @@ export default function CatalogueClient() {
 
           return (
             <Grid
-              item
               key={`${anime.nomAnimeURL}-${index}`}
-              xs={6}
-              sm={4}
-              md={3.5}
-              lg={2.4}
-              xl={1.6}
+              size={{ xs: 6, sm: 4, md: 3.5, lg: 2.4, xl: 1.6 }}
             >
               <AnimeCard
                 anime={anime}
@@ -254,7 +249,7 @@ export default function CatalogueClient() {
         })}
 
         {loading && (
-          <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
+          <Grid size={{ xs: 12 }} sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
             <Box
               sx={{
                 width: 60,

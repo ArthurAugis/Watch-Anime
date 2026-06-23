@@ -55,21 +55,23 @@ export default function LikesClient() {
       if (user?.id) {
         res = await fetch("/api/user/like/list", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
-            limit,
-            offset,
+            offset: offset,
+            limit: limit,
           }),
         });
       } else {
-        const likedAnimesRaw = localStorage.getItem("likedAnimes");
-        const likedAnimes = likedAnimesRaw ? JSON.parse(likedAnimesRaw) : [];
+        const likeRaw = localStorage.getItem("like");
+        const like = likeRaw ? JSON.parse(likeRaw) : [];
 
         res = await fetch("/api/guest/like/list", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            likedAnimes,
+            like,
             limit,
             offset,
           }),
@@ -86,7 +88,9 @@ export default function LikesClient() {
       let data;
       if (encoding === "gzip") {
         const compressed = await res.arrayBuffer();
-        const decompressed = new TextDecoder().decode(new Uint8Array(compressed));
+        const decompressed = new TextDecoder().decode(
+          new Uint8Array(compressed)
+        );
         data = JSON.parse(decompressed);
       } else {
         data = await res.json();
@@ -112,7 +116,7 @@ export default function LikesClient() {
         setHasMore(false);
       }
     } catch (error) {
-      console.error("Erreur lors du chargement des likes :", error);
+      console.error("Erreur lors du chargement des watch laters :", error);
     } finally {
       setLoading(false);
       isFetching.current = false;
@@ -168,21 +172,21 @@ export default function LikesClient() {
         Likes
       </Typography>
 
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center" sx={{ width: 'calc(100% - 60px)', margin: '0 auto' }}>
         {animes.map((anime, index) => {
           const isTriggerElement =
             index === animes.length - 5 || index === animes.length - 1;
 
           return (
             <Grid
-              item
               key={`${anime.nomAnimeURL}-${index}`}
-              xs={6}
-              sm={4}
-              md={3.5}
-              lg={2.4}
-              xl={1.6}
+              size={{ xs: 12, sm: 4, md: 2.4, lg: 1.714 }}
               ref={isTriggerElement ? triggerElementRef : null}
+              sx={{ 
+                width: { sm: 'calc((100% - 32px) / 3)', md: 'calc((100% - 64px) / 5)', lg: 'calc((100% - 96px) / 7)' },
+                flexGrow: 0,
+                flexShrink: 0
+              }}
             >
               <AnimeCard
                 anime={anime}
@@ -193,7 +197,10 @@ export default function LikesClient() {
         })}
 
         {loading && (
-          <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
+          <Grid
+            size={{ xs: 12 }}
+            sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}
+          >
             <Box
               sx={{
                 width: 60,
@@ -228,7 +235,7 @@ export default function LikesClient() {
         )}
 
         {!loading && animes.length === 0 && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography
               variant="h6"
               sx={{

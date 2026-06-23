@@ -277,7 +277,7 @@ export default function Home() {
                 </Typography>
                 <Typography>{slide.description}</Typography>
                 {slide.buttonLink.startsWith("/") ? (
-                  <Link href={slide.buttonLink} passHref legacyBehavior>
+                  <Link href={slide.buttonLink}>
                     <Button
                       variant="contained"
                       sx={{
@@ -381,10 +381,9 @@ function SectionContainer({
         >
           {title}
         </Typography>
-        <Link href={link} passHref legacyBehavior>
+        <Link href={link} style={{ textDecoration: "none" }}>
           <Typography
             variant="body2"
-            component="a"
             sx={{
               color: "rgb(126 34 206)",
               textDecoration: "none",

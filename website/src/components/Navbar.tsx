@@ -29,7 +29,7 @@ export default function Navbar() {
     categories: string[];
     langues: string[];
     subnames: string[];
-  }  
+  }
 
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -138,21 +138,21 @@ export default function Navbar() {
         },
       }}
     >
-        {isOpen ? (
-          <CloseIcon sx={{ color: "white", cursor: "pointer" }} style={{
-            display: "flex",
-            alignItems: "center",
-            margin: "10px",
-          }}
+      {isOpen ? (
+        <CloseIcon sx={{ color: "white", cursor: "pointer" }} style={{
+          display: "flex",
+          alignItems: "center",
+          margin: "10px",
+        }}
           onClick={toggleSidebar} />
-        ) : (
-          <MenuIcon sx={{ color: "white", cursor: "pointer" }}  style={{
-            display: "flex",
-            alignItems: "center",
-            margin: "10px",
-          }}
+      ) : (
+        <MenuIcon sx={{ color: "white", cursor: "pointer" }} style={{
+          display: "flex",
+          alignItems: "center",
+          margin: "10px",
+        }}
           onClick={toggleSidebar} />
-        )}
+      )}
 
       <Link href="/" style={{ textDecoration: "none" }}>
         {isOpen ? (

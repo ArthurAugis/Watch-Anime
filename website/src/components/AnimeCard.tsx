@@ -57,7 +57,7 @@ export default function AnimeCard({
 
   if (!anime) return null;
 
-  const imageUrl = `https://cdn.watch-anime.fr/img/anime/${anime.nomAnimeURL}.webp`;
+  const imageUrl = `${anime.afficheAnime}`;
 
   const CardContent = (
     <>

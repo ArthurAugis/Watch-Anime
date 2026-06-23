@@ -151,58 +151,48 @@ export default function HistoryAccueil({ animes: initialAnimes }: { animes?: Ani
         <Grid container spacing={2} justifyContent="flex-start">
           {loading
             ? Array.from({ length: 2 }).map((_, index) => (
+              <Grid
+                key={index}
+                size={{ xs: 6, sm: 4, md: 3.5, lg: 2.4, xl: 1.6 }}
+                ref={index === 0 ? firstRowRef : undefined}
+              >
+                <AnimeCard
+                  loading
+                  refProp={index === 0 ? firstRowRef : undefined}
+                />
+              </Grid>
+            ))
+            : animes.map((anime, index) => {
+              const triggerIndex =
+                animes.length > 5 ? animes.length - 5 : animes.length - 1;
+              const isTriggerElement = index === triggerIndex;
+
+              const baseAnime: BaseAnime = {
+                nomAnime: anime.nomAnime,
+                nomAnimeURL: anime.nomAnimeURL,
+                afficheAnime: anime.afficheAnime,
+                categories: [anime.saisonAnime, anime.episodeAnime],
+                langues: [anime.langue],
+              };
+
+              return (
                 <Grid
-                  item
-                  key={index}
-                  xs={6}
-                  sm={4}
-                  md={3.5}
-                  lg={2.4}
-                  xl={1.6}
-                  ref={index === 0 ? firstRowRef : undefined}
+                  key={`${anime.nomAnimeURL}-${index}`}
+                  size={{ xs: 6, sm: 4, md: 3.5, lg: 2.4, xl: 1.6 }}
                 >
                   <AnimeCard
-                    loading
-                    refProp={index === 0 ? firstRowRef : undefined}
+                    anime={baseAnime}
+                    refProp={isTriggerElement ? firstRowRef : undefined}
+                    onClick={() =>
+                      router.push(
+                        `/player/${anime.nomAnimeURL}/${anime.langue}/${anime.saisonAnimeURL}/${anime.episodeAnimeURL}`
+                      )
+                    }
+                    onMenuClick={(event) => handleOpenMenu(event, baseAnime)}
                   />
                 </Grid>
-              ))
-            : animes.map((anime, index) => {
-                const triggerIndex =
-                  animes.length > 5 ? animes.length - 5 : animes.length - 1;
-                const isTriggerElement = index === triggerIndex;
-
-                const baseAnime: BaseAnime = {
-                  nomAnime: anime.nomAnime,
-                  nomAnimeURL: anime.nomAnimeURL,
-                  afficheAnime: anime.afficheAnime,
-                  categories: [anime.saisonAnime, anime.episodeAnime],
-                  langues: [anime.langue],
-                };
-
-                return (
-                  <Grid
-                    item
-                    key={`${anime.nomAnimeURL}-${index}`}
-                    xs={6}
-                    sm={4}
-                    md={3.5}
-                    lg={2.4}
-                    xl={1.6}
-                  >
-                    <AnimeCard
-                      anime={baseAnime}
-                      refProp={isTriggerElement ? firstRowRef : undefined}
-                      onClick={() =>
-                        router.push(
-                          `/player/${anime.nomAnimeURL}/${anime.langue}/${anime.saisonAnimeURL}/${anime.episodeAnimeURL}`
-                        )
-                      }
-                      onMenuClick={(event) => handleOpenMenu(event, baseAnime)}
-                    />
-                  </Grid>
-                );
-              })}
+              );
+            })}
         </Grid>
       </Box>
     </Box>

@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
 import { db } from "@/lib/db";
 import { nanoid } from "nanoid";
+import { SITE_CONFIG } from "@/lib/config";
 
 interface User {
   id: string;
@@ -32,6 +33,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/login",
+    error: "/the-end",
   },
   callbacks: {
     async signIn({ user, account }) {
@@ -47,19 +49,25 @@ export const authOptions: NextAuthOptions = {
         );
 
         const users = rows as User[];
-        let userId = users.length > 0 ? users[0].id : nanoid();
 
-        if (users.length === 0) {
+        if (SITE_CONFIG.PRIVATE_MODE && users.length === 0) {
+          return false;
+        }
+
+        if (!SITE_CONFIG.PRIVATE_MODE && users.length === 0) {
+          const userId = nanoid();
           await db.query(
             "INSERT INTO users (id, name, email, image, provider, providerId) VALUES (?, ?, ?, ?, ?, ?)",
             [userId, user.name, user.email, user.image, provider, providerId]
           );
+          (user as User).id = userId;
+        } else {
+          (user as User).id = users[0].id;
         }
 
-        (user as User).id = userId;
         return true;
       } catch (error) {
-        console.error("Erreur lors de l'insertion de l'utilisateur :", error);
+        console.error("Error:", error);
         return false;
       }
     },
@@ -67,6 +75,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = (user as User).id;
+        token.authorized = true;
       }
       return token;
     },

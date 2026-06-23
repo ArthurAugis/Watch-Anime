@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
-import Navbar from "@/components/Navbar";
-import { Box } from "@mui/material";
+import LayoutContent from "@/components/LayoutContent";
+import Script from 'next/script';
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -65,18 +65,10 @@ export default function RootLayout({
         }}
       >
         <SessionProvider>
-          <Navbar />
-          <Box
-            component="main"
-            sx={{
-              padding: { xs: "20px 0px", md: "20px" },
-              marginLeft: "60px",
-              marginBottom: "100px",
-            }}
-          >
+          <LayoutContent>
             {children}
-          </Box>
-        </SessionProvider>
+          </LayoutContent>
+        </SessionProvider>r
       </body>
     </html>
   );
