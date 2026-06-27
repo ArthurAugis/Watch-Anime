@@ -399,15 +399,30 @@ export default function Navbar() {
                     <li
                       key={index}
                       style={{
-                        padding: "10px",
                         backgroundColor: "#2c2c2c",
                         marginBottom: "5px",
                         borderRadius: "5px",
                         cursor: "pointer",
-                        color: "white",
                       }}
                     >
-                      {anime.nomAnime}
+                      <Link
+                        href={`/player/${anime.nomAnimeURL}`}
+                        onClick={() => {
+                          setIsOpen(false);
+                          setOpenMenu(null);
+                          setSearchQuery("");
+                          setSearchResults([]);
+                        }}
+                        style={{
+                          color: "white",
+                          textDecoration: "none",
+                          display: "block",
+                          padding: "10px",
+                          width: "100%",
+                        }}
+                      >
+                        {anime.nomAnime}
+                      </Link>
                     </li>
                   ))}
                 </ul>
