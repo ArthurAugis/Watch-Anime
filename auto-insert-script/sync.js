@@ -57,7 +57,10 @@ async function syncAnime(infos, poster, db, caches) {
     }
 
     // 2. Alternative Titles
-    for (const subname of infos.titresAlter) {
+    for (let subname of infos.titresAlter) {
+        if (subname && subname.length > 255) {
+            subname = subname.substring(0, 255);
+        }
         const [subRows] = await db.query('SELECT * FROM tab_subname WHERE anime = ? AND subname = ?', [animeId, subname]);
         if (subRows.length === 0) {
             await db.query('INSERT INTO tab_subname (anime, subname) VALUES (?, ?)', [animeId, subname]);
