@@ -13,9 +13,20 @@ async function main() {
 
     let page = 1;
     let allLinks = [];
+    const seenLinks = new Set();
     while (true) {
       const links = await fetchLinksFromPage(page);
       if (!links.length) break;
+      
+      const hasNewLinks = links.some(link => !seenLinks.has(link));
+      if (!hasNewLinks) {
+        console.log(`Reached the end of the catalog (page ${page} contains no new links).`);
+        break;
+      }
+
+      for (const link of links) {
+        seenLinks.add(link);
+      }
       allLinks.push(...links);
       console.log(`Page ${page} : ${links.length} links found.`);
       page++;
