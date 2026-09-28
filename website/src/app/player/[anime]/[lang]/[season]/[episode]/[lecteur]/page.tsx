@@ -658,7 +658,11 @@ const PlayerClient: FC = () => {
         }}
       >
         <iframe
-          src={animeData.url_video}
+          src={
+            animeData.url_video.startsWith("https://ansembed.net/")
+              ? `/api/embed?url=${encodeURIComponent(animeData.url_video)}`
+              : animeData.url_video
+          }
           style={{
             position: "absolute",
             top: 0,
